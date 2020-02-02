@@ -1,0 +1,21 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 256
+  end
+  config.vm.define "mail" do |mail|
+    mail.vm.hostname = "mail.otus.local"
+    mail.vm.network "public_network", bridge: "eth1", ip: "192.168.1.20"
+    
+  end
+
+  config.vm.provision "ansible" do |ansible|
+    #ansible.verbose = "vvv"
+    ansible.playbook = "provisioning/playbook.yml"
+    ansible.become = "true"
+  end
+
+end
