@@ -1,0 +1,32 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+Vagrant.configure(2) do |config|
+  config.vm.box = "centos/7"
+  config.vm.provider "virtualbox" do |v|
+    v.memory = 1024
+  end
+  config.vm.define "consul" do |consul|
+    consul.vm.network "private_network", ip: "192.168.1.10", virtualbox__intnet: "local"
+    consul.vm.hostname = "consul"
+  end
+  config.vm.define "pg1" do |pg1|
+    pg1.vm.network "private_network", ip: "192.168.1.21", virtualbox__intnet: "local"
+    pg1.vm.hostname = "pg1"
+  end
+  config.vm.define "pg2" do |pg2|
+    pg2.vm.network "private_network", ip: "192.168.1.22", virtualbox__intnet: "local"
+    pg2.vm.hostname = "pg2"
+  end
+  config.vm.define "pg3" do |pg3|
+    pg3.vm.network "private_network", ip: "192.168.1.23", virtualbox__intnet: "local"
+    pg3.vm.hostname = "pg3"
+  end
+
+  config.vm.provision "ansible" do |ansible|
+   # ansible.verbose = "v"
+    ansible.playbook = "provisioning/playbook.yml"
+    ansible.become = "true"
+  end
+
+end
